@@ -1,0 +1,48 @@
+groups:
+  - name: fastapi_alerts
+    rules:
+      - alert: HighRequestLatency
+        expr: http_request_duration_seconds_bucket{le="1"} > 0.3
+        for: 1m
+        labels:
+          severity: warning
+          service: fastapi
+        annotations:
+          summary: "Обнаружена высокая задержка в FastAPI"
+          description: "Более 30% запросов выполняются дольше 1 секунды"
+
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[1m]) > 0.1
+        for: 1m
+        labels:
+          severity: critical
+          service: fastapi
+        annotations:
+          summary: "Обнаружен высокий уровень ошибок"
+          description: "Более 10% запросов завершаются ошибками 5xx"
+
+  - name: rabbitmq_alerts
+    rules:
+      - alert: RabbitQueueTooBig
+        expr: rabbitmq_queue_messages_ready{job="rabbitmq"} > 5
+        for: 1m
+        labels:
+          severity: warning
+          service: rabbitmq
+        annotations:
+          summary: "В очереди RabbitMQ слишком много сообщений"
+          description: "Очередь переполнена: более 5 сообщений в ожидании"
+
+      - alert: RabbitMQHighReadyMessages
+        expr: rabbitmq_queue_messages_ready{job="rabbitmq"} > 1
+        for: 5m
+        labels:
+          severity: warning
+          service: rabbitmq
+        annotations:
+          summary: "Высокое количество непрочитанных сообщений в очереди {{ $labels.name }}"
+          description: |
+            Очередь {{ $labels.name }} содержит более 1 непрочитанных сообщений.
+            Текущее значение: {{ $value }}"
+
+# © Кравченко

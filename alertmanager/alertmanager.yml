@@ -1,0 +1,61 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 30s
+  repeat_interval: 1h
+  receiver: 'fastapi_telegram'
+  routes:
+    - match:
+        service: 'fastapi'
+      receiver: 'fastapi_telegram'
+    - match:
+        service: 'rabbitmq'
+      receiver: 'rabbitmq_telegram'
+
+receivers:
+- name: 'fastapi_telegram'
+  telegram_configs:
+  # 
+  # 
+  # ВОТ ТУТ
+  - bot_token: '947583947:CNJnchCJEnctBStmFSuNscqSUXlp'
+    chat_id: 987654321
+    parse_mode: 'Markdown'
+    message: |
+      {{ if eq .CommonLabels.severity "critical" }}
+      *🔥 CRITICAL ALERT!*
+      {{ else if eq .CommonLabels.severity "warning" }}
+      *⚠️ WARNING!*
+      {{ else }}
+      *✅ INFO*
+      {{ end }}
+      *Alert:* {{ .CommonLabels.alertname }}
+      *Status:* {{ .CommonLabels.severity }}
+      *Description:* {{ .CommonAnnotations.description }}
+      *Instance:* {{ .CommonLabels.instance }}
+
+- name: 'rabbitmq_telegram'
+  telegram_configs:
+  # 
+  # 
+  # ВОТ ТУТ
+  - bot_token: '947583947:CNJnchCJEnctBStmFSuNscqSUXlp'
+    chat_id: 987654321
+    parse_mode: 'Markdown'
+    message: |
+      {{ if eq .CommonLabels.severity "critical" }}
+      *🔥 CRITICAL ALERT!*
+      {{ else if eq .CommonLabels.severity "warning" }}
+      *⚠️ WARNING!*
+      {{ else }}
+      *✅ INFO*
+      {{ end }}
+      *Alert:* {{ .CommonLabels.alertname }}
+      *Status:* {{ .CommonLabels.severity }}
+      *Description:* {{ .CommonAnnotations.description }}
+      *Instance:* {{ .CommonLabels.instance }}
+
+# © Кравченко
