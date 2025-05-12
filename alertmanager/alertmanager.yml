@@ -18,9 +18,6 @@ route:
 receivers:
 - name: 'fastapi_telegram'
   telegram_configs:
-  # 
-  # 
-  # ВОТ ТУТ
   - bot_token: '947583947:CNJnchCJEnctBStmFSuNscqSUXlp'
     chat_id: 987654321
     parse_mode: 'Markdown'
@@ -39,9 +36,6 @@ receivers:
 
 - name: 'rabbitmq_telegram'
   telegram_configs:
-  # 
-  # 
-  # ВОТ ТУТ
   - bot_token: '947583947:CNJnchCJEnctBStmFSuNscqSUXlp'
     chat_id: 987654321
     parse_mode: 'Markdown'
